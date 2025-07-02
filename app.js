@@ -49,8 +49,7 @@ const start = async () => {
         });
 
     } catch (error) {
-        console.log("Something went wrong : ",error);
-        
+        console.log("Something went wrong : ",error);    
     }
 }
 

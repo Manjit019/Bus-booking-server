@@ -97,9 +97,11 @@ async function seedDatabase() {
         }
 
         console.log('✅ Database seeded successfully!');
-    } catch (error) {
+    } 
+    catch (error) {
         console.error('❌ Error seeding database:', error);
-    } finally {
+    } 
+    finally {
         mongoose.connection.close();
     }
 }

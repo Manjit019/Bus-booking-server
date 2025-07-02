@@ -11,7 +11,7 @@ export const getUserTicket = async (req, res) => {
     try {
         const userId = req.userId;
 
-        const tickets = await Ticket.find({ user: userId }).populate("bus", "busId form to busType company departureTime arrivalTime price").sort({ bookedAt: -1 });
+        const tickets = await Ticket.find({ user: userId }).populate("bus", "busId from to busType company departureTime arrivalTime price").sort({ bookedAt: -1 });
 
         res.status(200).json({ success: true, tickets: tickets || [] });
 
@@ -42,7 +42,7 @@ export const bookTicket = async (req, res) => {
             return res.status(404).json({ error: "User not found!" });
         }
 
-        const unavailableSeats = seatNumbers.filter((seatNum) => 
+        const unavailableSeats = seatNumbers?.filter((seatNum) => 
             bus.seats?.some((row) => 
                 row?.some((seat) => seat.seat_id === seatNum && seat.booked)
             )
@@ -52,10 +52,10 @@ export const bookTicket = async (req, res) => {
             return res.status(400).json({ error: "Some seats are already booked.", unavailableSeats })
         };
 
-        const totalFare = bus.price * seatNumbers.length;
+        const totalFare = bus.price * seatNumbers?.length;
 
         const newTicket = new Ticket({
-            user : useId,
+            user : user._id,
             bus : bus._id,
             date,
             seatNumbers,

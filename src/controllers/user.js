@@ -26,7 +26,8 @@ export const loginOrSignUp = async (req, res) => {
             audience: process.env.GOOGLE_CLIENT_ID
         });
 
-        const payload = ticket.payload();
+        const payload = ticket.getPayload();
+    
         const { email, sub: google_id, name, picture, email_verified } = payload;
 
         if (!email_verified) {
