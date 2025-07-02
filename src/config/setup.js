@@ -31,37 +31,48 @@ const authenticate = async (email, password) => {
 export const buildAdminJS = async (app) => {
     const admin = new AdminJS({
         resources: [
-            { resource: User}, { resource: Bus }, { resource: Ticket }
+            { resource: User }, { resource: Bus }, { resource: Ticket }
         ],
-        defaultTheme : dark.id,
-        availableThemes : [dark,light,noSidebar],
-        rootPath : "/admin",
+        defaultTheme: dark.id,
+        availableThemes: [dark, light, noSidebar],
+        rootPath: "/admin",
+        branding: {
+            companyName: "GreenBus",
+            withMadeWithLove: false,
+            defaultTheme: dark.id,
+            availableTheme: [dark, light, noSidebar],
+            favicon: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGqUsjWuFlqAaTsc8wAnWExc2bPrUqQmu6BA&s',
+
+        },
     });
 
     const MongoDBStore = ConnectMongoDBSession(session);
     const sessionStore = new MongoDBStore({
-        uri : process.env.MONGO_URI,
-        collection : "sessions",
+        uri: process.env.MONGO_URI,
+        collection: "sessions",
     });
 
     const adminRouter = AdminJSExpress.buildAuthenticatedRouter(
         admin,
         {
-            cookieName : "adminjs",
-            cookiePassword : COOKIE_PASSWORD,
+            cookieName: "adminjs",
+            cookiePassword: COOKIE_PASSWORD,
             authenticate,
         },
         null,
         {
-            store : sessionStore,
-            resave : true,
-            saveUninitialized : true,
-            secret : COOKIE_PASSWORD,
-            cookie : {
-                httpOnly : process.env.NODE_ENV === "production",
-                secure : process.env.NODE_ENV === "production",
+            store: sessionStore,
+            resave: false,
+            saveUninitialized: true,
+            secret: COOKIE_PASSWORD || 'supersecretT20' ,
+            cookie: {
+                httpOnly: process.env.NODE_ENV === "production",
+                secure: process.env.NODE_ENV === "production",
+                sameSite: 'lax',
+                maxAge: 1000 * 60 * 60 * 24
+
             },
-            name : "adminjs", 
+            name: "adminjs",
         }
     );
 
